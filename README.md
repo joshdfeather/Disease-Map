@@ -1,4 +1,4 @@
-# 🌍 WHO Indicator Map
+#  WHO Indicator Map
 
 An interactive world map built with React and Leaflet that visualizes WHO health metrics (e.g. Life Expectancy, HIV prevalence) by country and year.
 
