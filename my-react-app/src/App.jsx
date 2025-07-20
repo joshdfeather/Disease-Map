@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "./App.css";
-import GeoMap from "./components/GeoMap";
+import MapView from "./MapView";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
-      <GeoMap />
+      <MapView />
     </>
   );
 }
