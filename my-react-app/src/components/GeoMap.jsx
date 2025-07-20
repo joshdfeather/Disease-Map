@@ -1,29 +1,53 @@
-import { useEffect, useState } from "react";
-import { GeoJSON } from "react-leaflet";
+import { GeoJSON, ScaleControl } from "react-leaflet";
 import BlankMap from "./BlankMap";
+import indicators from "../constants/indicators";
+import getColor from "../utils/getColor";
 
-export default function GeoMap() {
-  const [geoData, setGeoData] = useState(null);
+export default function GeoMap({
+  geoData,
+  activeData,
+  selected,
+  selectedYear,
+}) {
+  const styleFeature = (feature) => {
+    const iso3 = feature.properties.ADM0_A3;
+    const val = activeData[iso3];
+    return {
+      fillColor: getColor(val, selected),
+      weight: 0.5,
+      color: "black",
+      fillOpacity: 0.8,
+    };
+  };
 
-  useEffect(() => {
-    fetch("/world.geojson") // You can replace with any valid path or URL
-      .then((res) => res.json())
-      .then(setGeoData)
-      .catch((err) => console.error("Failed to load GeoJSON", err));
-  }, []);
+  const onEachFeature = (feature, layer) => {
+    const iso3 = feature.properties.ADM0_A3;
+    const name = feature.properties.ADMIN;
+    const value = activeData[iso3];
+    const { unit, label } = indicators[selected];
+    const formatValue = (val, unit) => {
+      if (val == null) return null;
+      return unit === "people" ? val.toLocaleString() : val.toFixed(1);
+    };
+    const display = formatValue(value, unit);
+    const tooltip = display
+      ? `<strong>${name}</strong><br/>${label} (${selectedYear}): ${display} ${unit}`
+      : `<strong>${name}</strong><br/><i>No data for ${selectedYear}</i>`;
+    layer.bindTooltip(tooltip, { sticky: true });
+  };
 
   return (
     <BlankMap>
       {geoData && (
-        <GeoJSON
-          data={geoData}
-          style={{
-            color: "#333",
-            weight: 1,
-            fillColor: "#5dade2",
-            fillOpacity: 0.6,
-          }}
-        />
+        <>
+          <GeoJSON
+            key={`${selected}-${selectedYear}`}
+            data={geoData}
+            style={styleFeature}
+            onEachFeature={onEachFeature}
+          />
+          <ScaleControl position="bottomleft" />
+        </>
       )}
     </BlankMap>
   );
