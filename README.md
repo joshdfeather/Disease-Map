@@ -4,6 +4,9 @@ An interactive world map built with React and Leaflet that visualizes WHO health
 
 ---
 
+<img width="614" height="585" alt="Screenshot 2025-07-20 at 15 18 03" src="https://github.com/user-attachments/assets/174020fb-358e-4bcf-a9e9-9652d38e0800" />
+
+
 ## Features
 
 - Interactive GeoJSON-based world map
